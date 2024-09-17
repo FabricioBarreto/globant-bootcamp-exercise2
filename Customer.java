@@ -1,31 +1,15 @@
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.UUID;
+import java.util.Objects;
 
 public class Customer {
-    private UUID id;
+    private Long id;
     private String name;
     private String lastName;
     private LocalDate birthDate;
     private String email;
     private String phone;
-    private String identificationNumber;
 
-    public Customer(String name, String lastName, String birthDate, String email, String phone, String identificationNumber) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.lastName = lastName;
-        this.birthDate = LocalDate.parse(birthDate);
-        this.email = email;
-        this.phone = phone;
-        this.identificationNumber = identificationNumber;
-    }
-
-    public Customer(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -33,47 +17,47 @@ public class Customer {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = LocalDate.parse(birthDate);
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public Customer(Long id, String name, String lastName, String birthDate, String email, String phone) {
+        if (Objects.isNull(id)) throw new IllegalArgumentException("Id cannot be null");
+        if (Objects.isNull(name)) throw new IllegalArgumentException("Name cannot be null");
+        if (Objects.isNull(birthDate)) throw new IllegalArgumentException("Lastname cannot be null");
+        if (Objects.isNull(lastName)) throw new IllegalArgumentException("Birth date cannot be null");
+        if (Objects.isNull(email)) throw new IllegalArgumentException("Email cannot be null");
+        if (Objects.isNull(phone)) throw new IllegalArgumentException("Phone cannot be null");
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.birthDate = LocalDate.parse(birthDate);
+        this.email = email;
         this.phone = phone;
     }
 
-    public String getIdentificationNumber() {
-        return identificationNumber;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer customer)) return false;
+        return Objects.equals(getId(), customer.getId()) && Objects.equals(getName(), customer.getName()) && Objects.equals(getLastName(), customer.getLastName()) && Objects.equals(getBirthDate(), customer.getBirthDate()) && Objects.equals(getEmail(), customer.getEmail()) && Objects.equals(getPhone(), customer.getPhone());
     }
 
-    public void setIdentificationNumber(String identificationNumber) {
-        this.identificationNumber = identificationNumber;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getLastName(), getBirthDate(), getEmail(), getPhone());
     }
+
 }

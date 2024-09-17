@@ -1,27 +1,19 @@
+import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Product {
 
-    private UUID id;
+    private Long id;
     private String name;
 
     private String description;
-    private double price;
+    private BigDecimal price;
 
     private ProductType type;
 
-    public Product(String name, String description, double price, ProductType type) {
-        this.id = id = UUID.randomUUID();
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.type = type;
-    }
 
-    public Product() {
-    }
-
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -41,11 +33,11 @@ public class Product {
         this.description = description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -55,5 +47,31 @@ public class Product {
 
     public void setType(ProductType type) {
         this.type = type;
+    }
+
+    public Product(Long id, String name, String description, BigDecimal price, ProductType type) {
+        if(Objects.isNull(id)) throw new IllegalArgumentException("Id cannot be null");
+        if(Objects.isNull(name)) throw new IllegalArgumentException("Name cannot be null");
+        if(Objects.isNull(description)) throw new IllegalArgumentException("Description cannot be null");
+        if(Objects.isNull(price)) throw new IllegalArgumentException("Price cannot be null");
+        if(price.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("Price must be greater than zero");
+        if(Objects.isNull(type)) throw new IllegalArgumentException("Type cannot be null");
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product product)) return false;
+        return Objects.equals(getId(), product.getId()) && Objects.equals(getName(), product.getName()) && Objects.equals(getDescription(), product.getDescription()) && Objects.equals(getPrice(), product.getPrice()) && getType() == product.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getPrice(), getType());
     }
 }
