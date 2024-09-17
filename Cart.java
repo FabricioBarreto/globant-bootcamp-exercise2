@@ -1,28 +1,24 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 public class Cart {
-    private UUID id;
+    private Long id;
+    private Customer customer;
 
     private CartStatus status;
 
-    List<Product> productList;
-
-    private Customer customer;
+    List<ShoppingCartItem> items;
 
     public void submitCart(){
         this.setStatus(CartStatus.SUBMITTED);
     }
 
-    public Cart(Customer customer){
-        this.id = UUID.randomUUID();
-        this.status = CartStatus.DRAFT;
-        this.productList = new ArrayList<>();
-        this.customer = customer;
+    public void setStatus(CartStatus status) {
+        this.status = status;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -30,23 +26,32 @@ public class Cart {
         return status;
     }
 
-    public void setStatus(CartStatus status) {
-        this.status = status;
-    }
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
+    public List<ShoppingCartItem> getItems() {
+        return items;
     }
 
     public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    public Cart(Long id, Customer customer){
+        if(Objects.isNull(id)) throw new IllegalArgumentException("Id cannot be null");
+        if(Objects.isNull(customer)) throw new IllegalArgumentException("Customer cannot be null");
+        this.id = id;
         this.customer = customer;
+        this.status = CartStatus.DRAFT;
+        this.items = Objects.isNull(items) ? new ArrayList<>() : items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cart cart)) return false;
+        return Objects.equals(getId(), cart.getId()) && getStatus() == cart.getStatus() && Objects.equals(items, cart.items) && Objects.equals(getCustomer(), cart.getCustomer());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStatus(), items, getCustomer());
     }
 }
