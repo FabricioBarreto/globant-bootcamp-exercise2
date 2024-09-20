@@ -1,3 +1,8 @@
+package model;
+
+import model.CartStatus;
+import model.ShoppingCartItem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

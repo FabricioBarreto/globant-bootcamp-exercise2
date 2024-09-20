@@ -1,3 +1,5 @@
+package model;
+
 public enum CartStatus {
     DRAFT("Draft"),
     SUBMITTED("Submitted");

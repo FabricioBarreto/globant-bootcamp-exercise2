@@ -1,6 +1,7 @@
+package model;
+
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Product {
 
