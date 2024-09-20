@@ -1,89 +1,92 @@
-import java.time.chrono.ChronoLocalDate;
-import java.util.*;
-import java.time.LocalDate;
-import java.util.stream.Collectors;
+import model.Cart;
+import model.Product;
+import model.Customer;
+import model.ProductType;
+import service.CartService;
+import service.CustomerService;
+import service.ProductService;
+import service.impl.CartServiceImpl;
+import service.impl.CustomerServiceImpl;
+import service.impl.ProductServiceImpl;
+
+import java.math.BigDecimal;
 
 public class Main {
 
     public static void main(String[] args) {
 
+        ProductService productService = new ProductServiceImpl();
+        CustomerService customerService = new CustomerServiceImpl();
+        CartService cartService = new CartServiceImpl();
+
         // Create a Customer named John Smith
-        Customer customer1 = new Customer("John", "Smith", "2000-10-26",
-                "example@gmail.com","123456789","ID123456");
+        customerService.createCustomer(1L, "John", "Smith", "2000-10-26",
+                "example@gmail.com","123456789");
+
+        Customer customer1 = customerService.getCustomerById(1L);
 
         // Create 5 Products of each type
-        Product laptop = new Product("Laptop", "A fast laptop", 90.25, ProductType.ELECTRONIC);
-        Product phone = new Product("Phone", "A new smartphone", 200, ProductType.ELECTRONIC);
-        Product tablet = new Product("Tablet", "A new Tablet", 330.60, ProductType.ELECTRONIC);
-        Product smartwatch = new Product("Smartwatch", "A smartwatch", 120, ProductType.ELECTRONIC);
-        Product headphone = new Product("Headphones", "Noise-canceling headphones", 80.25, ProductType.ELECTRONIC);
+        Product laptop = productService.createProduct(1L, "Laptop", "A fast laptop", new BigDecimal("90.25"), ProductType.ELECTRONIC);
+        Product phone = productService.createProduct(2L, "Phone", "A new smartphone",  new BigDecimal("200"), ProductType.ELECTRONIC);
+        Product tablet = productService.createProduct(3L, "Tablet", "A new Tablet", new BigDecimal("330.60"), ProductType.ELECTRONIC);
+        Product smartwatch = productService.createProduct(4L,"Smartwatch", "A smartwatch", new BigDecimal("120"), ProductType.ELECTRONIC);
+        Product headphones = productService.createProduct(5L,"Headphones", "Noise-canceling headphones", new BigDecimal("80.25"), ProductType.ELECTRONIC);
 
-        Product harryPotter = new Product("Harry Potter", "A popular book", 15.0, ProductType.LIBRARY);
-        Product nineteenEightyFour = new Product("1984", "A classic novel", 20.0, ProductType.LIBRARY);
-        Product java8 = new Product("Java 8", "A programming book", 52.4, ProductType.LIBRARY);
-        Product python101 = new Product("Python 101", "Intro to Python", 30.0, ProductType.LIBRARY);
-        Product dataScience = new Product("Data Science", "Data Science book", 110.0, ProductType.LIBRARY);
+        Product harryPotter = productService.createProduct(6L,"Harry Potter", "A popular book", new BigDecimal("15.0"), ProductType.LIBRARY);
+        Product nineteenEightyFour = productService.createProduct(7L,"1984", "A classic novel", new BigDecimal("20.0"), ProductType.LIBRARY);
+        Product java8 = productService.createProduct(8L,"Java 8", "A programming book", new BigDecimal("52.4"), ProductType.LIBRARY);
+        Product python = productService.createProduct(9L,"Python 101", "Intro to Python", new BigDecimal("30.0"), ProductType.LIBRARY);
+        Product dataScience = productService.createProduct(10L,"Data Science", "Data Science book", new BigDecimal("110.0"), ProductType.LIBRARY);
 
-        Product tshirt = new Product("T-shirt", "A cotton t-shirt", 12.4, ProductType.OTHER);
-        Product mug = new Product("Mug", "A coffee mug", 5.0, ProductType.OTHER);
-        Product notebook = new Product("Notebook", "A writing notebook", 10.0, ProductType.OTHER);
-        Product backpack = new Product("Backpack", "A school backpack", 25.0, ProductType.OTHER);
-        Product penSet = new Product("Pen Set", "A set of pens", 18.0, ProductType.OTHER);
+        Product tshirt = productService.createProduct(11L,"T-shirt", "A cotton t-shirt", new BigDecimal("12.4"), ProductType.OTHER);
+        Product mug = productService.createProduct(12L,"Mug", "A coffee mug", new BigDecimal("5.0"), ProductType.OTHER);
+        Product notebook = productService.createProduct(13L,"Notebook", "A writing notebook", new BigDecimal("10.0"), ProductType.OTHER);
+        Product backpack = productService.createProduct(14L,"Backpack", "A school backpack", new BigDecimal("25.0"), ProductType.OTHER);
+        Product penSet = productService.createProduct(15L,"Pen Set", "A set of pens", new BigDecimal("18.0"), ProductType.OTHER);
 
         // Create a shopping cart with 4 ELECTRONIC products
-        Cart cart1 = new Cart(customer1);
-        cart1.productList.add(laptop);
-        cart1.productList.add(tablet);
-        cart1.productList.add(phone);
-        cart1.productList.add(smartwatch);
+        Cart cart1 =  cartService.createCart(1L, customer1);
+        cartService.addShoppingCartItem(cart1.getId(),1L,laptop,2);
+        cartService.addShoppingCartItem(cart1.getId(),2L,tablet,1);
+        cartService.addShoppingCartItem(cart1.getId(),3L,phone,4);
+        cartService.addShoppingCartItem(cart1.getId(),4L,smartwatch,3);
 
         //Create a shopping cart with 3 LIBRARY products
-        Cart cart2 = new Cart(customer1);
-        cart2.productList.add(harryPotter);
-        cart2.productList.add(nineteenEightyFour);
-        cart2.productList.add(java8);
+        Cart cart2 = cartService.createCart(2L,customer1);
+        cartService.addShoppingCartItem(cart2.getId(),1L,harryPotter,2);
+        cartService.addShoppingCartItem(cart2.getId(),2L,nineteenEightyFour,4);
+        cartService.addShoppingCartItem(cart2.getId(),3L,java8,3);
 
         //Create a shopping cart with 1 OTHER products
-        Cart cart3 = new Cart(customer1);
-        cart3.productList.add(tshirt);
+        Cart cart3 = cartService.createCart(3L,customer1);
+        cartService.addShoppingCartItem(cart3.getId(),1L,tshirt,2);
 
         //Submit a Shopping Cart
         cart1.submitCart();
 
         //A shopping cart with a list of products in different categories (at least 3 for category).
-        Cart shoppingCart = new Cart(customer1);
-        shoppingCart.productList.add(laptop);
-        shoppingCart.productList.add(tablet);
-        shoppingCart.productList.add(phone);
-        shoppingCart.productList.add(harryPotter);
-        shoppingCart.productList.add(java8);
-        shoppingCart.productList.add(dataScience);
-        shoppingCart.productList.add(tshirt);
-        shoppingCart.productList.add(mug);
-        shoppingCart.productList.add(notebook);
+        Cart shoppingCart = cartService.createCart(4L,customer1);
+        cartService.addShoppingCartItem(shoppingCart.getId(),1L,laptop,3);
+        cartService.addShoppingCartItem(shoppingCart.getId(),2L,tablet,2);
+        cartService.addShoppingCartItem(shoppingCart.getId(),3L,phone,5);
+        cartService.addShoppingCartItem(shoppingCart.getId(),4L,harryPotter,1);
+        cartService.addShoppingCartItem(shoppingCart.getId(),5L,java8,2);
+        cartService.addShoppingCartItem(shoppingCart.getId(),6L,dataScience,4);
+        cartService.addShoppingCartItem(shoppingCart.getId(),7L,tshirt,2);
+        cartService.addShoppingCartItem(shoppingCart.getId(),8L,mug,4);
+        cartService.addShoppingCartItem(shoppingCart.getId(),9L,notebook,1);
 
         //Calculate and Print all products with price > 100 and product type is library
-        List<Product> productsGraterThan100 = shoppingCart.productList.stream()
-                .filter(p -> p.getPrice() > 100 && p.getType().equals(ProductType.LIBRARY)).toList();
-
-        System.out.println("Products with price > 100 and product type is Library");
-        productsGraterThan100.forEach(p ->
-                System.out.println(p.getName() + " - $" + p.getPrice()));
+        System.out.println(productService.productsPriceGraterThan100AndTypeLibrary(shoppingCart));
 
         // Calculate and Print sum(price) of all products
-        double sumAllProducts = shoppingCart.productList.stream().mapToDouble(Product::getPrice).sum();
-        System.out.println("Total Sum of all products: $" + sumAllProducts);
+        System.out.println(productService.sumPriceOfAllProducts(shoppingCart));
 
         // Calculate and Print sum(price) of all electronic products
-        double sumAllElectronicsProducts = shoppingCart.productList.stream()
-                .filter(p -> p.getType().equals(ProductType.ELECTRONIC)).mapToDouble(Product::getPrice).sum();
-        System.out.println("Sum of all electronic products: $" + sumAllElectronicsProducts);
+        System.out.println(productService.sumPriceOfAllElectronic(shoppingCart));
 
         // Print all information of the shopping cart ordered by price
-        shoppingCart.getProductList().stream()
-                .sorted(Comparator.comparingDouble(Product::getPrice))
-                .forEach(product ->
-                        System.out.println(shoppingCart.getId() + " | " + product.getId() + " | " + product.getType() + " | " + product.getName() + " | $" + product.getPrice()));
+        System.out.println(productService.informationOrderedByPrice(shoppingCart));
 
     }
 }
